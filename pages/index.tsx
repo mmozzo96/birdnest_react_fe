@@ -59,7 +59,7 @@ export default function Home() {
         (DaP1, DaP2) =>
           getTimeDiffms(DaP1.timestamp) - getTimeDiffms(DaP2.timestamp)
       ).map((droneAndPilot) => (
-        <Pilot droneAndPilot={droneAndPilot}></Pilot>
+        <Pilot droneAndPilot={droneAndPilot} key={droneAndPilot.droneData.serialNumber}></Pilot>
       ))}
     </Flex>
   );
