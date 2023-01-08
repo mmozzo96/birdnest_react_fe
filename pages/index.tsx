@@ -5,8 +5,46 @@ import Pilot from "../components/Pilot";
 import { Flex, useToast, Grid, Box } from "@chakra-ui/react";
 import { getTimeDiffms } from "../util";
 
-function Title(props: {children: string}) {
-  return <Flex textAlign="center" justify="center" align="center" fontWeight="bolder" fontSize="18">{props.children}</Flex>;
+function Title(props: { children: string }) {
+  return (
+    <Flex
+      textAlign="center"
+      justify="center"
+      align="center"
+      fontWeight="bolder"
+      fontSize="18"
+    >
+      {props.children}
+    </Flex>
+  );
+}
+
+function removeDuplicates(fetchedNDZPilots: droneAndPilot[]): droneAndPilot[] {
+  let fetchedNDZPilotsNoDuplicates: droneAndPilot[] = [];
+
+  fetchedNDZPilots.forEach((NDZPilot: droneAndPilot) => {
+    const serialNumbers: string[] = fetchedNDZPilotsNoDuplicates.map(
+      (daP: droneAndPilot) => daP.serialNumber
+    );
+
+    if (!serialNumbers.includes(NDZPilot.serialNumber)) {
+      fetchedNDZPilotsNoDuplicates.push(NDZPilot);
+    } 
+    else {
+      const previousNDZPilotIndex: number | undefined =
+        fetchedNDZPilotsNoDuplicates.findIndex(
+          (daP: droneAndPilot) => daP.serialNumber === NDZPilot.serialNumber
+        );
+      const previousNDZPilot = fetchedNDZPilotsNoDuplicates[previousNDZPilotIndex]
+
+      if(previousNDZPilot?.distance && previousNDZPilot?.distance > NDZPilot.distance) {
+        fetchedNDZPilotsNoDuplicates.splice(previousNDZPilotIndex, 1)
+        fetchedNDZPilotsNoDuplicates.push(NDZPilot)
+      }
+    }
+  });
+
+  return fetchedNDZPilotsNoDuplicates
 }
 
 export default function Home() {
@@ -19,7 +57,15 @@ export default function Home() {
       axios
         .get("https://birdnest-flask-app.herokuapp.com/dronesandpilots")
         .then((response) => {
-          setNDZPilots(response.data as droneAndPilot[]);
+          const fetchedNDZPilots = response.data as droneAndPilot[];
+          console.log(
+            new Set(
+              fetchedNDZPilots.map((daP: droneAndPilot) => daP.pilot.pilotId)
+            ).size === fetchedNDZPilots.length
+          );
+          
+          const fetchedNDZPilotsNoDuplicates: droneAndPilot[] = removeDuplicates(fetchedNDZPilots)
+          setNDZPilots(fetchedNDZPilotsNoDuplicates);
         })
         .catch((error: Error) => {
           console.log(error);
@@ -30,7 +76,7 @@ export default function Home() {
             duration: 1500,
           });
         });
-      axios
+      /* axios
         .get("https://birdnest-flask-app.herokuapp.com/drones")
         .then((response) => {
           setDrones(response.data as drone[]);
@@ -43,7 +89,7 @@ export default function Home() {
             title: error.message + " fetching drones",
             duration: 1500,
           });
-        });
+        }); */
     }, 2000);
     return () => clearInterval(interval);
   }, []);
@@ -59,7 +105,10 @@ export default function Home() {
         (DaP1, DaP2) =>
           getTimeDiffms(DaP1.timestamp) - getTimeDiffms(DaP2.timestamp)
       ).map((droneAndPilot) => (
-        <Pilot droneAndPilot={droneAndPilot} key={droneAndPilot.droneData.serialNumber}></Pilot>
+        <Pilot
+          droneAndPilot={droneAndPilot}
+          key={droneAndPilot.droneData.serialNumber}
+        ></Pilot>
       ))}
     </Flex>
   );
