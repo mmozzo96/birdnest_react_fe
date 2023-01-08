@@ -1,60 +1,45 @@
-import { Box, Grid, Popover, PopoverTrigger, PopoverContent, Button, PopoverBody, Flex } from "@chakra-ui/react";
+import { Flex, Grid } from "@chakra-ui/react";
 import React from "react";
-import { droneAndPilot, pilot } from "../types";
-import LastSeen from "./LastSeen";
+import { droneAndPilot } from "../types";
+import { getTimeDiffms } from "../util";
+import TableRow from "./TableRow";
 
-function PopoverBodyItem(props: {children: pilot}) {
-  const pilot = props.children
+function LastSeen(timestamp?: string): string {
+  if (!timestamp) return "";
+  const lastSeenDifferencems: number = getTimeDiffms(timestamp);
 
-  return <Flex direction="column">
-    <Flex>
-      <Box marginRight='1em'>email:</Box> <Box>{pilot.email}</Box>
-    </Flex>
-    <Flex>
-      <Box marginRight='1em'>Phone number:</Box> <Box>{pilot.phoneNumber}</Box>
-    </Flex>
-    <Flex>
-      <Box marginRight='1em'>Pilot ID:</Box> <Box>{pilot.pilotId}</Box>
-    </Flex>
-  </Flex>
+  const diffLastSeenDifference: string =
+    lastSeenDifferencems < 60000
+      ? "<1min ago"
+      : lastSeenDifferencems < 120000
+      ? "1min ago"
+      : Math.floor(lastSeenDifferencems / 60000) + "mins ago";
+
+  return diffLastSeenDifference;
 }
 
-export default function Pilot(props: {droneAndPilot: droneAndPilot}) {
-  const {droneAndPilot} = props
+export default function Pilot(props: { droneAndPilot?: droneAndPilot }) {
+  const { droneAndPilot } = props;
+  const isTitle: boolean = !droneAndPilot;
+  const info = {
+    "Pilot name":
+      droneAndPilot?.pilot.firstName + " " + droneAndPilot?.pilot.lastName,
+    "Closer distance to the nest": droneAndPilot?.distance
+      ? Math.floor(droneAndPilot?.distance * 100) / 100 + " m"
+      : "",
+    "Last seen": LastSeen(droneAndPilot?.timestamp),
+    Email: droneAndPilot?.pilot.email ?? "",
+    "Phone number": droneAndPilot?.pilot.phoneNumber ?? "",
+  };
+  const infoArray: string[] = isTitle ? Object.keys(info) : Object.values(info);
 
-  if(!droneAndPilot.pilot.pilotId) {
-    return <Popover placement="right">
-    <PopoverTrigger>
-      <Button marginBottom="8px" w="100%">
-        No available pilot info
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent>
-      <PopoverBody>
-        {JSON.stringify(droneAndPilot.droneData, null, 2)}
-      </PopoverBody>
-    </PopoverContent>
-  </Popover>
-  }
-
-  return <Popover placement="right">
-    <PopoverTrigger>
-      <Button marginBottom="8px">
-        <Grid templateColumns='50% 25% 25%' w='100%'>
-          <Box>
-            {droneAndPilot.pilot.firstName}{' '}{droneAndPilot.pilot.lastName}
-          </Box>
-          <Box>
-            {Math.floor(droneAndPilot.distance*100)/100}{' m'}
-          </Box>
-          <LastSeen timestamp={droneAndPilot.timestamp}/>
-        </Grid>
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent>
-      <PopoverBody>
-        <PopoverBodyItem>{droneAndPilot.pilot}</PopoverBodyItem>
-      </PopoverBody>
-    </PopoverContent>
-  </Popover>
+  return (
+    <TableRow isTitle={isTitle}>
+      {infoArray.map((element: string) => (
+        <Flex align="center" justify="center">
+          {element}
+        </Flex>
+      ))}
+    </TableRow>
+  );
 }
