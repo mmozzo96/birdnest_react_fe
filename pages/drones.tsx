@@ -55,11 +55,13 @@ export default function Drones() {
       <Flex justify="space-between">
         <Map drones={drones}></Map>
         <Flex direction="column" w="500px" minW="500px" marginLeft="50px">
-          <Heading size="md" textTransform="uppercase">No Drone Zone drones</Heading>
+          <Heading size="md" textTransform="uppercase">
+            No Drone Zone drones
+          </Heading>
           <TableRow isTitle={true} templateColumns="40% 30% 30%">
             {["Serial number", "Position X", "Position Y"].map(
               (element: string) => (
-                <Flex align="center" justify="center">
+                <Flex align="center" justify="center" key={element}>
                   {element}
                 </Flex>
               )
@@ -73,9 +75,9 @@ export default function Drones() {
                 Math.round(+drone.positionY / 1000) + "m",
               ];
               return (
-                <TableRow templateColumns="40% 30% 30%">
+                <TableRow templateColumns="40% 30% 30%" key={drone.serialNumber}>
                   {droneInfo.map((element: string) => (
-                    <Flex align="center" justify="center">
+                    <Flex align="center" justify="center" key={element}>
                       {element}
                     </Flex>
                   ))}

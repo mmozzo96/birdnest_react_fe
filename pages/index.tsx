@@ -54,7 +54,7 @@ function removeDuplicates(fetchedNDZPilots: droneAndPilot[]): droneAndPilot[] {
 export default function Home() {
   const [NDZPilots, setNDZPilots] = useState<droneAndPilot[]>([]);
   const toast = useToast();
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -92,7 +92,13 @@ export default function Home() {
           <Heading size="lg" marginBottom="2rem">
             Pilots that crossed No Drone Zone limit
           </Heading>
-          <Button onClick={()=>{router.push("/drones")}}>Drones</Button>
+          <Button
+            onClick={() => {
+              router.push("/drones");
+            }}
+          >
+            Drones
+          </Button>
         </Flex>
         <Pilot></Pilot>
         {NDZPilots.sort(

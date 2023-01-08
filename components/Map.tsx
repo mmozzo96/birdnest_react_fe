@@ -1,16 +1,23 @@
-import { Box, Flex, Popover, PopoverBody, PopoverContent, PopoverTrigger } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { drone } from "../types";
 import { getDistance } from "../util";
 
 function mapPosition(positionmm: string, dronesSizepx: number): number {
-  return Math.round(+positionmm / 1000) * 2 - dronesSizepx/2;
+  return Math.round(+positionmm / 1000) * 2 - dronesSizepx / 2;
 }
 
 export default function Map(props: { drones: drone[] }) {
   const { drones } = props;
-  const dronesSize: number = 10
-  const positionInfo: string[] = ["positionX", "positionY"]
+  const dronesSize: number = 10;
+  const positionInfo: string[] = ["positionX", "positionY"];
 
   return (
     <Box
@@ -34,37 +41,44 @@ export default function Map(props: { drones: drone[] }) {
         h="400px"
         boxSizing="content-box"
       />
-      {drones.length>0 && drones.map((drone: drone) => {
-        const isNDZ: boolean = getDistance(drone)<100
+      {drones.length > 0 &&
+        drones.map((drone: drone) => {
+          const isNDZ: boolean = getDistance(drone) < 100;
 
-        return <Popover key={drone.serialNumber}>
-          <PopoverTrigger>
-            <Box
-              position="absolute"
-              bottom={mapPosition(drone.positionY, dronesSize)+"px"}
-              left={mapPosition(drone.positionX, dronesSize)+"px"}
-              w={dronesSize+"px"}
-              h={dronesSize+"px"}
-              backgroundColor={isNDZ? "red" : "#555"}
-              border="0px"
-              cursor="pointer"
-              borderRadius="100%"
-            />
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverBody>
-            <Flex>
-                <Box marginRight='1em'>{"Serail number:"}</Box>
-                <Box>{drone["serialNumber"]}</Box>
-              </Flex>
-              {positionInfo.map((key:string) => <Flex>
-                <Box marginRight='1em'>{key+":"}</Box>
-                <Box>{Math.round(+drone[key as keyof drone]/1000)+"m"}</Box>
-              </Flex>)}
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
-      })}
+          return (
+            <Popover key={drone.serialNumber}>
+              <PopoverTrigger>
+                <Box
+                  position="absolute"
+                  bottom={mapPosition(drone.positionY, dronesSize) + "px"}
+                  left={mapPosition(drone.positionX, dronesSize) + "px"}
+                  w={dronesSize + "px"}
+                  h={dronesSize + "px"}
+                  backgroundColor={isNDZ ? "red" : "#555"}
+                  border="0px"
+                  cursor="pointer"
+                  borderRadius="100%"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverBody>
+                  <Flex>
+                    <Box marginRight="1em">{"Serail number:"}</Box>
+                    <Box>{drone["serialNumber"]}</Box>
+                  </Flex>
+                  {positionInfo.map((key: string) => (
+                    <Flex key={key}>
+                      <Box marginRight="1em">{key + ":"}</Box>
+                      <Box>
+                        {Math.round(+drone[key as keyof drone] / 1000) + "m"}
+                      </Box>
+                    </Flex>
+                  ))}
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          );
+        })}
     </Box>
   );
 }

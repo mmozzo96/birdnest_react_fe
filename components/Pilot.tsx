@@ -36,7 +36,7 @@ export default function Pilot(props: { droneAndPilot?: droneAndPilot }) {
   return (
     <TableRow isTitle={isTitle}>
       {infoArray.map((element: string) => (
-        <Flex align="center" justify="center">
+        <Flex align="center" justify="center" key={element}>
           {element}
         </Flex>
       ))}
