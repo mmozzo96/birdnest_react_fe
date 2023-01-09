@@ -75,7 +75,10 @@ export default function Drones() {
                 Math.round(+drone.positionY / 1000) + "m",
               ];
               return (
-                <TableRow templateColumns="40% 30% 30%" key={drone.serialNumber}>
+                <TableRow
+                  templateColumns="40% 30% 30%"
+                  key={drone.serialNumber}
+                >
                   {droneInfo.map((element: string) => (
                     <Flex align="center" justify="center" key={element}>
                       {element}

@@ -2,23 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { drone, droneAndPilot } from "../types";
 import Pilot from "../components/Pilot";
-import { Flex, useToast, Grid, Box, Heading, Button } from "@chakra-ui/react";
+import { Flex, useToast, Heading, Button, Spinner } from "@chakra-ui/react";
 import { getTimeDiffms } from "../util";
 import { useRouter } from "next/router";
-
-function Title(props: { children: string }) {
-  return (
-    <Flex
-      textAlign="center"
-      justify="center"
-      align="center"
-      fontWeight="bolder"
-      fontSize="18"
-    >
-      {props.children}
-    </Flex>
-  );
-}
 
 function removeDuplicates(fetchedNDZPilots: droneAndPilot[]): droneAndPilot[] {
   let fetchedNDZPilotsNoDuplicates: droneAndPilot[] = [];
@@ -101,6 +87,11 @@ export default function Home() {
           </Button>
         </Flex>
         <Pilot></Pilot>
+        {NDZPilots.length === 0 && (
+          <Flex justify="center" marginTop="50px">
+            <Spinner size="xl" thickness="4px" speed="0.8s" />
+          </Flex>
+        )}
         {NDZPilots.sort(
           (DaP1, DaP2) =>
             getTimeDiffms(DaP1.timestamp) - getTimeDiffms(DaP2.timestamp)
