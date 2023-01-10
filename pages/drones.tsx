@@ -41,7 +41,7 @@ export default function Drones() {
   return (
     <Flex direction="column" w="100%" minW="900px">
       <Flex justify="space-between">
-        <Heading size="lg" marginBottom="4rem">
+        <Heading size="md" marginBottom="4rem">
           Pilots that crossed No Drone Zone limit
         </Heading>
         <Button

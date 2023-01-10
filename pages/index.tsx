@@ -48,11 +48,6 @@ export default function Home() {
         .get("https://birdnest-flask-app.herokuapp.com/dronesandpilots")
         .then((response) => {
           const fetchedNDZPilots = response.data as droneAndPilot[];
-          console.log(
-            new Set(
-              fetchedNDZPilots.map((daP: droneAndPilot) => daP.pilot.pilotId)
-            ).size === fetchedNDZPilots.length
-          );
 
           const fetchedNDZPilotsNoDuplicates: droneAndPilot[] =
             removeDuplicates(fetchedNDZPilots);
@@ -72,20 +67,20 @@ export default function Home() {
   }, []);
 
   return (
-    <Flex>
-      <Flex direction="column" w="100%" minW="900px">
-        <Flex justify="space-between">
-          <Heading size="lg" marginBottom="2rem">
-            Pilots that crossed No Drone Zone limit
-          </Heading>
-          <Button
-            onClick={() => {
-              router.push("/drones");
-            }}
-          >
-            Drones
-          </Button>
-        </Flex>
+    <Flex direction="column" w="100%" minW="900px" h={{ md: "", base: "80hv" }}>
+      <Flex justify="space-between">
+        <Heading size="md" marginBottom="2rem">
+          Pilots that crossed No Drone Zone limit
+        </Heading>
+        <Button
+          onClick={() => {
+            router.push("/drones");
+          }}
+        >
+          Drones
+        </Button>
+      </Flex>
+      <Flex direction={{ base: "row", md: "column" }}>
         <Pilot></Pilot>
         {NDZPilots.length === 0 && (
           <Flex justify="center" marginTop="50px">
