@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { drone, droneAndPilot } from "../types";
+import {droneAndPilot } from "../types";
 import Pilot from "../components/Pilot";
 import { Flex, useToast, Heading, Button, Spinner } from "@chakra-ui/react";
 import { getTimeDiffms } from "../util";

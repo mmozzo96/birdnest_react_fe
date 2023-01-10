@@ -1,4 +1,4 @@
-import { Flex, Grid } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React from "react";
 import { droneAndPilot } from "../types";
 import { getTimeDiffms } from "../util";

@@ -1,5 +1,5 @@
 import { Grid, GridProps } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import React from "react";
 
 interface props extends GridProps {
   isTitle?: boolean;
