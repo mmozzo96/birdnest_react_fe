@@ -68,11 +68,12 @@ export default function Home() {
 
   return (
     <Flex direction="column" w="100%" minW="900px" h={{ md: "", base: "80hv" }}>
-      <Flex justify="space-between">
+      <Flex justify={{ md: "space-between", base: "" }}>
         <Heading size="md" marginBottom="2rem">
           Pilots that crossed No Drone Zone limit
         </Heading>
         <Button
+          marginLeft={{ md: "", base: "50px" }}
           onClick={() => {
             router.push("/drones");
           }}

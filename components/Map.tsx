@@ -22,10 +22,10 @@ export default function Map(props: { drones: drone[] }) {
 
   return (
     <Box
-      minH="1000px"
-      h="1000px"
-      minW="1000px"
-      w="1000px"
+      minH={{ md: "1000px", base: "500px" }}
+      h={{ md: "1000px", base: "500px" }}
+      minW={{ md: "1000px", base: "500px" }}
+      w={{ md: "1000px", base: "500px" }}
       border="3px solid #999"
       backgroundColor="#fff"
       position="relative"
@@ -35,13 +35,13 @@ export default function Map(props: { drones: drone[] }) {
         <>
           <Box
             position="absolute"
-            top="300px"
-            left="300px"
+            top={{ md: "300px", base: "150px" }}
+            left={{ md: "300px", base: "150px" }}
             backgroundColor="rgba(0,0,0,0.05)"
             borderRadius="100%"
             border="1px dashed black"
-            w="400px"
-            h="400px"
+            w={{ md: "400px", base: "200px" }}
+            h={{ md: "400px", base: "200px" }}
             boxSizing="content-box"
           />
           {drones.map((drone: drone) => {
@@ -52,8 +52,14 @@ export default function Map(props: { drones: drone[] }) {
                 <PopoverTrigger>
                   <Box
                     position="absolute"
-                    bottom={mapPosition(drone.positionY, dronesSize) + "px"}
-                    left={mapPosition(drone.positionX, dronesSize) + "px"}
+                    bottom={{
+                      md: mapPosition(drone.positionY, dronesSize) + "px",
+                      base: mapPosition(drone.positionY, dronesSize) / 2 + "px",
+                    }}
+                    left={{
+                      md: mapPosition(drone.positionX, dronesSize) + "px",
+                      base: mapPosition(drone.positionX, dronesSize) / 2 + "px",
+                    }}
                     w={dronesSize + "px"}
                     h={dronesSize + "px"}
                     backgroundColor={isNDZ ? "red" : "#555"}
