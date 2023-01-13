@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import {droneAndPilot } from "../types";
-import Pilot from "../components/Pilot";
-import { Flex, useToast, Heading, Button, Spinner } from "@chakra-ui/react";
+import { Button, Flex, Heading, Spinner, useToast } from "@chakra-ui/react";
+import { droneAndPilot } from "../types";
 import { getTimeDiffms } from "../util";
 import { useRouter } from "next/router";
+import axios from "axios";
+import Pilot from "../components/Pilot";
+import React, { useState, useEffect } from "react";
 
-function removeDuplicates(fetchedNDZPilots: droneAndPilot[]): droneAndPilot[] {
-  let fetchedNDZPilotsNoDuplicates: droneAndPilot[] = [];
+function removeDuplicates(fetchedNdzPilots: droneAndPilot[]): droneAndPilot[] {
+  let fetchedNdzPilotsNoDuplicates: droneAndPilot[] = [];
 
-  fetchedNDZPilots.forEach((NDZPilot: droneAndPilot) => {
-    const serialNumbers: string[] = fetchedNDZPilotsNoDuplicates.map(
+  fetchedNdzPilots.forEach((ndzPilot: droneAndPilot) => {
+    const serialNumbers: string[] = fetchedNdzPilotsNoDuplicates.map(
       (daP: droneAndPilot) => daP.serialNumber
     );
 
-    if (!serialNumbers.includes(NDZPilot.serialNumber)) {
-      fetchedNDZPilotsNoDuplicates.push(NDZPilot);
+    if (!serialNumbers.includes(ndzPilot.serialNumber)) {
+      fetchedNdzPilotsNoDuplicates.push(ndzPilot);
     } else {
-      const previousNDZPilotIndex: number | undefined =
-        fetchedNDZPilotsNoDuplicates.findIndex(
-          (daP: droneAndPilot) => daP.serialNumber === NDZPilot.serialNumber
+      const previousNdzPilotIndex: number | undefined =
+        fetchedNdzPilotsNoDuplicates.findIndex(
+          (daP: droneAndPilot) => daP.serialNumber === ndzPilot.serialNumber
         );
-      const previousNDZPilot =
-        fetchedNDZPilotsNoDuplicates[previousNDZPilotIndex];
+      const previousNdzPilot =
+        fetchedNdzPilotsNoDuplicates[previousNdzPilotIndex];
 
       if (
-        previousNDZPilot?.distance &&
-        previousNDZPilot?.distance > NDZPilot.distance
+        previousNdzPilot?.distance &&
+        previousNdzPilot?.distance > ndzPilot.distance
       ) {
-        fetchedNDZPilotsNoDuplicates.splice(previousNDZPilotIndex, 1);
-        fetchedNDZPilotsNoDuplicates.push(NDZPilot);
+        fetchedNdzPilotsNoDuplicates.splice(previousNdzPilotIndex, 1);
+        fetchedNdzPilotsNoDuplicates.push(ndzPilot);
       }
     }
   });
 
-  return fetchedNDZPilotsNoDuplicates;
+  return fetchedNdzPilotsNoDuplicates;
 }
 
 export default function Home() {
-  const [NDZPilots, setNDZPilots] = useState<droneAndPilot[]>([]);
+  const [ndzPilots, setNdzPilots] = useState<droneAndPilot[]>([]);
   const toast = useToast();
   const router = useRouter();
 
@@ -47,11 +47,11 @@ export default function Home() {
       axios
         .get("https://birdnest-flask-app.herokuapp.com/dronesandpilots")
         .then((response) => {
-          const fetchedNDZPilots = response.data as droneAndPilot[];
+          const fetchedNdzPilots = response.data as droneAndPilot[];
 
-          const fetchedNDZPilotsNoDuplicates: droneAndPilot[] =
-            removeDuplicates(fetchedNDZPilots);
-          setNDZPilots(fetchedNDZPilotsNoDuplicates);
+          const fetchedNdzPilotsNoDuplicates: droneAndPilot[] =
+            removeDuplicates(fetchedNdzPilots);
+          setNdzPilots(fetchedNdzPilotsNoDuplicates);
         })
         .catch((error: Error) => {
           console.log(error);
@@ -83,20 +83,22 @@ export default function Home() {
       </Flex>
       <Flex direction={{ base: "row", md: "column" }}>
         <Pilot></Pilot>
-        {NDZPilots.length === 0 && (
+        {ndzPilots.length === 0 && (
           <Flex justify="center" marginTop="50px">
             <Spinner size="xl" thickness="4px" speed="0.8s" />
           </Flex>
         )}
-        {NDZPilots.sort(
-          (DaP1, DaP2) =>
-            getTimeDiffms(DaP1.timestamp) - getTimeDiffms(DaP2.timestamp)
-        ).map((droneAndPilot) => (
-          <Pilot
-            droneAndPilot={droneAndPilot}
-            key={droneAndPilot.droneData.serialNumber}
-          ></Pilot>
-        ))}
+        {ndzPilots
+          .sort(
+            (DaP1, DaP2) =>
+              getTimeDiffms(DaP1.timestamp) - getTimeDiffms(DaP2.timestamp)
+          )
+          .map((droneAndPilot) => (
+            <Pilot
+              droneAndPilot={droneAndPilot}
+              key={droneAndPilot.droneData.serialNumber}
+            ></Pilot>
+          ))}
       </Flex>
     </Flex>
   );

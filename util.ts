@@ -1,4 +1,4 @@
-import { drone } from "./types";
+import { Drone } from "./types";
 
 export function getTimeDiffms(timestamp: string): number {
   const lastSeen = new Date(timestamp);
@@ -9,7 +9,7 @@ export function getTimeDiffms(timestamp: string): number {
   return lastSeenDifferencems;
 }
 
-export function getDistance(drone: drone) {
+export function getDistance(drone: Drone) {
   return (
     Math.sqrt(
       Math.pow(+drone.positionX - 250000, 2) +

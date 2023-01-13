@@ -1,4 +1,4 @@
-export interface drone {
+export interface Drone {
   altitude: string;
   firmware: string;
   ipv4: string;
@@ -22,7 +22,7 @@ export interface  pilot {
 
 export interface droneAndPilot {
   distance: number;
-  droneData: drone;
+  droneData: Drone;
   pilot: pilot
   serialNumber: string;
   timestamp: string;

@@ -7,15 +7,15 @@ import {
   PopoverTrigger,
   Spinner,
 } from "@chakra-ui/react";
-import React from "react";
-import { drone } from "../types";
+import { Drone } from "../types";
 import { getDistance } from "../util";
+import React from "react";
 
 function mapPosition(positionmm: string, dronesSizepx: number): number {
   return Math.round(+positionmm / 1000) * 2 - dronesSizepx / 2;
 }
 
-export default function Map(props: { drones: drone[] }) {
+export default function Map(props: { drones: Drone[] }) {
   const { drones } = props;
   const dronesSize: number = 10;
   const positionInfo: string[] = ["positionX", "positionY"];
@@ -44,8 +44,8 @@ export default function Map(props: { drones: drone[] }) {
             h={{ md: "400px", base: "200px" }}
             boxSizing="content-box"
           />
-          {drones.map((drone: drone) => {
-            const isNDZ: boolean = getDistance(drone) < 100;
+          {drones.map((drone: Drone) => {
+            const isNdz: boolean = getDistance(drone) < 100;
 
             return (
               <Popover key={drone.serialNumber}>
@@ -62,7 +62,7 @@ export default function Map(props: { drones: drone[] }) {
                     }}
                     w={dronesSize + "px"}
                     h={dronesSize + "px"}
-                    backgroundColor={isNDZ ? "red" : "#555"}
+                    backgroundColor={isNdz ? "red" : "#555"}
                     border="0px"
                     cursor="pointer"
                     borderRadius="100%"
@@ -78,7 +78,7 @@ export default function Map(props: { drones: drone[] }) {
                       <Flex key={key}>
                         <Box marginRight="1em">{key + ":"}</Box>
                         <Box>
-                          {Math.round(+drone[key as keyof drone] / 1000) + "m"}
+                          {Math.round(+drone[key as keyof Drone] / 1000) + "m"}
                         </Box>
                       </Flex>
                     ))}

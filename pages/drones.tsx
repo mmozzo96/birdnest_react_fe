@@ -1,27 +1,27 @@
 import { Button, Flex, Heading, useToast } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Map from "../components/Map";
-import { drone } from "../types";
-import axios from "axios";
+import { Drone } from "../types";
 import { getDistance } from "../util";
+import { useRouter } from "next/router";
+import axios from "axios";
+import Map from "../components/Map";
 import TableRow from "../components/TableRow";
+import React, { useEffect, useState } from "react";
 
 export default function Drones() {
   const router = useRouter();
   const toast = useToast();
-  const [drones, setDrones] = useState<drone[]>([]);
-  const [NDZDrones, setNDZDrones] = useState<drone[]>([]);
+  const [drones, setDrones] = useState<Drone[]>([]);
+  const [ndzDrones, setNdzDrones] = useState<Drone[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       axios
         .get("https://birdnest-flask-app.herokuapp.com/drones")
         .then((response) => {
-          setDrones(response.data as drone[]);
-          setNDZDrones(
-            (response.data as drone[]).filter(
-              (drone: drone) => getDistance(drone) < 100
+          setDrones(response.data as Drone[]);
+          setNdzDrones(
+            (response.data as Drone[]).filter(
+              (drone: Drone) => getDistance(drone) < 100
             )
           );
         })
@@ -88,8 +88,8 @@ export default function Drones() {
                 )
               )}
             </TableRow>
-            {NDZDrones.length > 0 &&
-              NDZDrones.map((drone: drone) => {
+            {ndzDrones.length > 0 &&
+              ndzDrones.map((drone: Drone) => {
                 const droneInfo = [
                   drone.serialNumber,
                   Math.round(+drone.positionX / 1000) + "m",

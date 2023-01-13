@@ -1,7 +1,7 @@
-import { Flex } from "@chakra-ui/react";
-import React from "react";
 import { droneAndPilot } from "../types";
+import { Flex } from "@chakra-ui/react";
 import { getTimeDiffms } from "../util";
+import React from "react";
 import TableRow from "./TableRow";
 
 function LastSeen(timestamp?: string): string {
